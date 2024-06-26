@@ -9,11 +9,12 @@ navigator.mediaDevices.getUserMedia({ video: true, audio: true })
         const peer = new Peer(undefined, {
             path: '/peerjs',
             host: '/',
-            port: '9000',
-            secure: true
+            port: location.port || (location.protocol === 'https:' ? 443 : 80),
+            secure: location.protocol === 'https:'
         });
 
         peer.on('open', id => {
+            const ROOM_ID = 'learn-fluent-room'; // Ensure you define a room ID
             socket.emit('join-room', ROOM_ID, id);
         });
 
@@ -44,6 +45,9 @@ navigator.mediaDevices.getUserMedia({ video: true, audio: true })
             });
             peers[userId] = call;
         }
+    })
+    .catch(error => {
+        console.error('Error accessing media devices.', error);
     });
 
 document.addEventListener('DOMContentLoaded', () => {
