@@ -1,0 +1,17 @@
+{
+  "name": "learn-fluent",
+  "version": "1.0.0",
+  "description": "A language learning platform connecting random users for video calls",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "express": "^4.17.1",
+    "jsonwebtoken": "^8.5.1",
+    "mysql2": "^2.2.5",
+    "peer": "^0.6.1",
+    "socket.io": "^4.0.0"
+  }
+}
