@@ -1,4 +1,3 @@
-// server.js
 const express = require('express');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
@@ -8,7 +7,7 @@ const http = require('http');
 const server = http.createServer(app);
 const { Server } = require('socket.io');
 const io = new Server(server);
-const { PeerServer } = require('peer');
+const { ExpressPeerServer } = require('peer');
 
 const PORT = process.env.PORT || 3000;
 const SECRET_KEY = process.env.SECRET_KEY;
@@ -49,10 +48,12 @@ io.on('connection', (socket) => {
     });
 });
 
-const peerServer = PeerServer({
-    port: 9000,
+// PeerJS setup
+const peerServer = ExpressPeerServer(server, {
+    debug: true,
     path: '/peerjs'
 });
+app.use('/peerjs', peerServer);
 
 server.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);
