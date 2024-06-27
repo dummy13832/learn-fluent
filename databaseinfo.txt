@@ -1,10 +1,1 @@
-database host:sql12.freemysqlhosting.net
-database name:	sql12716073
-database username:sql12716073
-database password:
-
-Server: sql12.freemysqlhosting.net
-Name: sql12716073
-Username: sql12716073
-Password: ZUDx3ugtXA
-Port number: 3306
+..
