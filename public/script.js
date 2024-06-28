@@ -25,33 +25,9 @@ joinButton.addEventListener('click', async () => {
     languageSelect.style.display = 'none';
     connectingMessage.style.display = 'block';
 
-    localStream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
-    localVideo.srcObject = localStream;
-
-    socket.on('offer', async (offer) => {
-        peerConnection = new RTCPeerConnection(servers);
-        peerConnection.addStream(localStream);
-
-        peerConnection.onaddstream = (event) => {
-            remoteVideo.srcObject = event.stream;
-        };
-
-        await peerConnection.setRemoteDescription(new RTCSessionDescription(offer));
-        const answer = await peerConnection.createAnswer();
-        await peerConnection.setLocalDescription(answer);
-        socket.emit('answer', answer);
-    });
-
-    socket.on('answer', async (answer) => {
-        await peerConnection.setRemoteDescription(new RTCSessionDescription(answer));
-    });
-
-    socket.on('candidate', async (candidate) => {
-        await peerConnection.addIceCandidate(new RTCIceCandidate(candidate));
-    });
-
-    socket.on('ready', async () => {
-        if (peerConnection) return;
+    try {
+        localStream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
+        localVideo.srcObject = localStream;
 
         peerConnection = new RTCPeerConnection(servers);
         peerConnection.addStream(localStream);
@@ -60,27 +36,25 @@ joinButton.addEventListener('click', async () => {
             remoteVideo.srcObject = event.stream;
         };
 
-        const offer = await peerConnection.createOffer();
-        await peerConnection.setLocalDescription(offer);
-        socket.emit('offer', offer);
-    });
+        peerConnection.onicecandidate = (event) => {
+            if (event.candidate) {
+                socket.emit('candidate', event.candidate);
+            }
+        };
 
-    peerConnection.onicecandidate = (event) => {
-        if (event.candidate) {
-            socket.emit('candidate', event.candidate);
-        }
-    });
+        socket.on('offer', async (offer) => {
+            await peerConnection.setRemoteDescription(new RTCSessionDescription(offer));
+            const answer = await peerConnection.createAnswer();
+            await peerConnection.setLocalDescription(answer);
+            socket.emit('answer', answer);
+        });
 
-    socket.on('connected', () => {
-        connectingMessage.style.display = 'none';
-        videoContainer.style.display = 'flex';
-    });
-});
+        socket.on('answer', async (answer) => {
+            await peerConnection.setRemoteDescription(new RTCSessionDescription(answer));
+        });
 
-exitButton.addEventListener('click', () => {
-    peerConnection.close();
-    socket.emit('leave');
-    videoContainer.style.display = 'none';
-    joinButton.style.display = 'block';
-    languageSelect.style.display = 'block';
-});
+        socket.on('candidate', async (candidate) => {
+            await peerConnection.addIceCandidate(new RTCIceCandidate(candidate));
+        });
+
+        socket.on('ready', async () => {}

@@ -7,9 +7,10 @@
     "start": "node server/server.js"
   },
   "dependencies": {
-    "express": "^4.17.1",
+    "express": "^4.19.2",
     "socket.io": "^4.0.1"
   },
   "author": "Your Name",
-  "license": "ISC"
+  "license": "ISC",
+  "keywords": []
 }
