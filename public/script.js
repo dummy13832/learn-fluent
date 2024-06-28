@@ -69,7 +69,7 @@ joinButton.addEventListener('click', async () => {
         if (event.candidate) {
             socket.emit('candidate', event.candidate);
         }
-    });
+    };
 
     socket.on('connected', () => {
         connectingMessage.style.display = 'none';
