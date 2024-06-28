@@ -42,12 +42,20 @@ joinButton.addEventListener('click', async () => {
             }
         };
 
+<<<<<<< HEAD
         socket.on('offer', async (offer) => {
             await peerConnection.setRemoteDescription(new RTCSessionDescription(offer));
             const answer = await peerConnection.createAnswer();
             await peerConnection.setLocalDescription(answer);
             socket.emit('answer', answer);
         });
+=======
+    peerConnection.onicecandidate = (event) => {
+        if (event.candidate) {
+            socket.emit('candidate', event.candidate);
+        }
+    };
+>>>>>>> 73bfb42c8e5c10949cae7b9b5615e0498c2b2cb9
 
         socket.on('answer', async (answer) => {
             await peerConnection.setRemoteDescription(new RTCSessionDescription(answer));
